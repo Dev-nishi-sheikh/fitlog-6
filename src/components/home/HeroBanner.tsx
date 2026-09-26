@@ -3,11 +3,9 @@ import Link from "next/link";
 export default function HeroBanner() {
   return (
     <section className="relative overflow-hidden rounded-2xl border border-white/10 bg-[#15171e]">
-      {/* Background glow */}
       <div className="pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full bg-[#baff00]/5 blur-3xl" />
 
       <div className="relative grid md:grid-cols-[1fr_380px]">
-        {/* Content */}
         <div className="px-6 py-12 sm:px-10 md:px-12 md:py-16">
           <p className="mb-5 text-xs font-black tracking-[0.08em] text-[#baff00]">
             WORKOUT LIBRARY
@@ -32,7 +30,6 @@ export default function HeroBanner() {
           </Link>
         </div>
 
-        {/* Hero Image */}
         <div className="relative flex min-h-[260px] items-center justify-center px-6 pb-8 md:min-h-[360px] md:px-0 md:pb-0">
           <img
             src="/images/banner.png"

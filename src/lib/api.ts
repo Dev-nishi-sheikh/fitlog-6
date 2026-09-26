@@ -1,10 +1,7 @@
-import { Workout } from "@/types/workout";
+import type { Workout } from "@/types/workout";
 
-const API_URL = process.env.FITLOG_API_URL;
-
-if (!API_URL) {
-  throw new Error("FITLOG_API_URL is not defined");
-}
+const API_URL =
+  process.env.NEXT_PUBLIC_API_URL || "https://api.abcz.workers.dev/api/fitlog";
 
 export async function getWorkouts(): Promise<Workout[]> {
   const response = await fetch(API_URL, {
@@ -24,7 +21,7 @@ export async function getWorkout(id: number): Promise<Workout> {
   });
 
   if (!response.ok) {
-    throw new Error("Failed to fetch workout");
+    throw new Error("Workout not found");
   }
 
   return response.json();

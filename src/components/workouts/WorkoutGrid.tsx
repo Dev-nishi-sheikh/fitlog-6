@@ -1,4 +1,5 @@
-import { Workout } from "@/types/workout";
+import type { Workout } from "@/types/workout";
+
 import WorkoutCard from "./WorkoutCard";
 
 interface WorkoutGridProps {
@@ -8,6 +9,7 @@ interface WorkoutGridProps {
 export default function WorkoutGrid({ workouts }: WorkoutGridProps) {
   return (
     <div
+      id="workouts"
       className="
         grid
         grid-cols-1
