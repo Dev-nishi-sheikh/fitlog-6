@@ -83,8 +83,8 @@ export default function Navbar() {
             src="/images/logo.png"
             alt="FitLog"
             className="
-              h-7
-              w-7
+              h-5
+              w-6
               shrink-0
               object-contain
             "
