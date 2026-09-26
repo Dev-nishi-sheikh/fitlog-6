@@ -48,63 +48,67 @@ export function FitLogProvider({ children }: { children: ReactNode }) {
 
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
-  /* LOAD */
+  const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
     try {
       const storedPlan = localStorage.getItem(PLAN_STORAGE_KEY);
-
       const storedSaved = localStorage.getItem(SAVED_STORAGE_KEY);
-
       const storedDone = localStorage.getItem(DONE_STORAGE_KEY);
 
       if (storedPlan) {
-        const data = JSON.parse(storedPlan);
+        const parsedPlan = JSON.parse(storedPlan);
 
-        if (Array.isArray(data)) {
-          setPlan(data);
+        if (Array.isArray(parsedPlan)) {
+          setPlan(parsedPlan);
         }
       }
 
       if (storedSaved) {
-        const data = JSON.parse(storedSaved);
+        const parsedSaved = JSON.parse(storedSaved);
 
-        if (Array.isArray(data)) {
-          setSaved(data);
+        if (Array.isArray(parsedSaved)) {
+          setSaved(parsedSaved);
         }
       }
 
       if (storedDone) {
-        const data = JSON.parse(storedDone);
+        const parsedDone = JSON.parse(storedDone);
 
-        if (Array.isArray(data)) {
-          setDoneIds(data);
+        if (Array.isArray(parsedDone)) {
+          setDoneIds(parsedDone);
         }
       }
     } catch (error) {
       console.error("Failed to load FitLog data:", error);
+    } finally {
+      setIsHydrated(true);
     }
   }, []);
 
-  /* SAVE PLAN */
-
   useEffect(() => {
+    if (!isHydrated) {
+      return;
+    }
+
     localStorage.setItem(PLAN_STORAGE_KEY, JSON.stringify(plan));
-  }, [plan]);
-
-  /* SAVE SAVED */
+  }, [plan, isHydrated]);
 
   useEffect(() => {
+    if (!isHydrated) {
+      return;
+    }
+
     localStorage.setItem(SAVED_STORAGE_KEY, JSON.stringify(saved));
-  }, [saved]);
-
-  /* SAVE DONE */
+  }, [saved, isHydrated]);
 
   useEffect(() => {
-    localStorage.setItem(DONE_STORAGE_KEY, JSON.stringify(doneIds));
-  }, [doneIds]);
+    if (!isHydrated) {
+      return;
+    }
 
-  /* TOAST */
+    localStorage.setItem(DONE_STORAGE_KEY, JSON.stringify(doneIds));
+  }, [doneIds, isHydrated]);
 
   const showToast = (message: string) => {
     setToastMessage(message);
@@ -113,8 +117,6 @@ export function FitLogProvider({ children }: { children: ReactNode }) {
       setToastMessage(null);
     }, 2500);
   };
-
-  /* PLAN */
 
   const addToPlan = (workout: Workout) => {
     setPlan((current) => {
@@ -141,8 +143,6 @@ export function FitLogProvider({ children }: { children: ReactNode }) {
   const isInPlan = (workoutId: number) =>
     plan.some((item) => item.id === workoutId);
 
-  /* SAVED */
-
   const saveWorkout = (workout: Workout) => {
     setSaved((current) => {
       if (current.some((item) => item.id === workout.id)) {
@@ -168,8 +168,6 @@ export function FitLogProvider({ children }: { children: ReactNode }) {
   const isSaved = (workoutId: number) =>
     saved.some((item) => item.id === workoutId);
 
-  /* DONE */
-
   const markAsDone = (workoutId: number) => {
     setDoneIds((current) => {
       if (current.includes(workoutId)) {
@@ -183,8 +181,6 @@ export function FitLogProvider({ children }: { children: ReactNode }) {
   };
 
   const isDone = (workoutId: number) => doneIds.includes(workoutId);
-
-  /* COUNTS */
 
   const planCount = plan.length;
   const savedCount = saved.length;
@@ -246,6 +242,7 @@ export function FitLogProvider({ children }: { children: ReactNode }) {
                 flex
                 h-5
                 w-5
+                shrink-0
                 items-center
                 justify-center
                 rounded-full
